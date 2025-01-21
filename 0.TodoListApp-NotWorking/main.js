@@ -39,41 +39,6 @@ function renderTodos() {
             </li>
         `;
 
-        //We create buttons here and that's why we create addEventListeners here...
-        // TOFIX: Add event listenters to the buttons (to the ul container, e.target style):
-        const completeBtn = document.querySelector(`li[data-id='${i}']>.complete-btn`);
-        const deleteBtn = document.querySelector(`li[data-id='${i}']>.delete-btn`);
-
-        completeBtn.addEventListener('click', (e)=>{
-            // console.log('sss');
-
-            // console.log('1.We in here');
-            // console.log(`0.i=${i}`);
-            
-            //data attribute - to know which li is pressed on
-            const index = completeBtn.parentElement.dataset.id;
-            console.log(`index: ${index}`);
-
-            //change state
-            toggleComplete(index);
-            //change UI
-            renderTodos();
-            console.dir(todoItems);
-        });
-
-        deleteBtn.addEventListener('click', (e)=>{
-            //console.log('000');
-            
-            const index = completeBtn.parentElement.dataset.id;
-            console.log(`index: ${index}`);
-
-            //change state
-            deleteTodo(index);
-            //change UI
-            renderTodos();
-            console.dir(todoItems);
-        });
-
     }
 }
 
@@ -104,4 +69,17 @@ dom.addTodoButton.addEventListener('click', (e)=>{
     //change UI
     renderTodos();
     console.dir(todoItems);
+});
+
+dom.todoList.addEventListener("click", (e)=>{
+    let targetId = e.target.parentElement.dataset.id;
+
+    if(e.target.classList.contains('complete-btn')){
+        todoItems[targetId].completed = !todoItems[targetId].completed;
+    }else if(e.target.classList.contains('delete-btn')){
+        todoItems.splice(targetId, 1);
+    }
+        
+    renderTodos();
+    
 });
