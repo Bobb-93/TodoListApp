@@ -1,0 +1,39 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* li[data-id="0"]>.complete-btn{
+            background-color: blue;
+        }
+        .li[data-id="0"]>.delete-btn{
+            background-color: blue;
+        } */
+    </style>
+</head>
+<body>
+    <div id="todo-list-container">
+    <!-- <div id="todo-container"> -->
+        <h1>Todo List</h1>
+        <input type="text" id="todo-input" placeholder="Enter a new task">
+        <button id="add-todo">Add Task</button>
+        <ul id="todo-list">
+            <li class="todo-item" data-id='0'>
+                <span class="completed">Learn HTML</span>
+                <button class="complete-btn">Undo</button>
+                <button class="delete-btn">Delete</button>
+            </li>
+            <li class="todo-item" data-id='1'>
+                <span class="completed">Learn HTML</span>
+                <button class="complete-btn">Undo</button>
+                <button class="delete-btn">Delete</button>
+            </li>
+        </ul>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
