@@ -20,6 +20,10 @@ body {
     box-sizing: border-box;
 }
 
+#todo-list{
+    padding: 0;
+}
+
 /* Input field for new todos */
 #todo-input {
     box-sizing: border-box;
