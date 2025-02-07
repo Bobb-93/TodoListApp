@@ -1,6 +1,11 @@
 function addTodo() {
     const todoTitle = dom.todoInput.value.trim();
 
+    //change server state
+    //fetch - и ако е минало успешно, да променяме
+
+    //change local state
+
     if (!todoTitle) {
         alert('Please enter a correct task title!');
         return;
@@ -16,6 +21,8 @@ function addTodo() {
 
     localStorage.setItem("todoItems", JSON.stringify(todoItems));
     dom.todoInput.value = '';
+
+    //change server value
 
 }
 
@@ -101,17 +108,17 @@ const dom = {
     todoList: document.getElementById('todo-list')
 };
 
-// // initialize state
-// const todoItems = [
-//     {
-//         'task': 'Task 1',
-//         'completed': false
-//     },
-//     {
-//         'task': 'Task 2',
-//         'completed': true
-//     },
-// ]; // взимаме информация от тук, когато искаме да изобразяваме
+async function getTasks(url) {
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log(data);
+    
+    todoItemsDB = [...data];
+}
+
+// initialize state
+let todoItemsDB; // взимаме информация от тук, когато искаме да изобразяваме
+getTasks();
 
 let todoItems = JSON.parse(localStorage.getItem("todoItems")) || [];
 renderTodos();
