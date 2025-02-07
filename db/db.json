@@ -1,4 +1,10 @@
 {
-    "todos":[],
-    "users":[]
+  "todos": [
+    {
+      "id": "db90",
+      "title": "Todo1",
+      "completed": false
+    }
+  ],
+  "users": []
 }
