@@ -35,21 +35,28 @@ function addTodo() {
 }
 
 function toggleComplete(index) {
-    const todo = todoItems[index];
+    // const todo = todoItems[index];
+
+    const todo = todoItems.filter(todo => todo.id === index)[0];
+
+    console.dir(todoItems);
+    console.log(`index: ${index}`);
+    console.log(`todo: ${todo}`);
+
     // todo.completed = !todo.completed;
 
     fetch(`${baseURL}/todos/${index}`, {
         method: "PATCH",
-        body: JSON.stringify({"completed":!todo.completed}),
+        body: JSON.stringify({ "completed": !todo.completed }),
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         }
     })
-        .then(response=>{
-            if(response.ok){
+        .then(response => {
+            if (response.ok) {
                 //change local state
-                todoItems.splice(index, 1);
-            }else{
+                todoItems.forEach(todo => todo.id === index && (todo.completed = !todo.completed));
+            } else {
                 throw new Error(`Server error status: ${response.status}`);
             }
         })
@@ -58,13 +65,20 @@ function toggleComplete(index) {
 }
 function deleteTodo(index) {
     fetch(`${baseURL}/todos/${index}`, {
-        method: "DELETE", 
+        method: "DELETE",
     })
-        .then(response=>{
-            if(response.ok){
+        .then(response => {
+            if (response.ok) {
                 //change local state
-                todoItems.splice(index, 1);
-            }else{
+                // todoItems.splice(index, 1);
+
+                const todoIndex = todoItems.findIndex(todo => todo.id == index);
+                
+                if (todoIndex !== -1) {
+                    todoItems.splice(todoIndex, 1);
+                }
+
+            } else {
                 throw new Error(`Server error status: ${response.status}`);
             }
         })
@@ -136,11 +150,10 @@ dom.todoList.addEventListener('click', (e) => {
     const idx = e.target.parentElement.dataset.id;
 
     if (e.target.classList.contains('complete-btn')) {
-        todoItems[idx].completed = !todoItems[idx].completed;
+        toggleComplete(idx);
         renderTodos();
     } else if (e.target.classList.contains('delete-btn')) {
         deleteTodo(idx);
-        // todoItems.splice(idx, 1);
         renderTodos();
     }
 })
