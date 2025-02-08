@@ -36,10 +36,14 @@ function addTodo() {
 
 function toggleComplete(index) {
     const todo = todoItems[index];
-    todo.completed = !todo.completed;
+    // todo.completed = !todo.completed;
 
     fetch(`${baseURL}/todos/${index}`, {
-        method: "DELETE", 
+        method: "PATCH",
+        body: JSON.stringify({"completed":!todo.completed}),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        }
     })
         .then(response=>{
             if(response.ok){
