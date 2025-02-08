@@ -1,5 +1,10 @@
 function addTodo() {
-    const todoTitle = dom.todoInput.value;
+    const todoTitle = dom.todoInput.value.trim();
+
+    if (!todoTitle) {
+        alert('Please enter a correct task title!');
+        return;
+    }
 
     const newTodo = {
         'task': todoTitle,
@@ -18,6 +23,8 @@ function addTodo() {
         .then(response => {
             if (response.ok) {
                 return response.json();
+
+                //Bad idea:
                 //Get Task Id
                 // // change local state if server responded ok
                 // todoItems.push(newTodo);
@@ -63,6 +70,7 @@ function toggleComplete(index) {
         .catch(error => console.error(`ERROR: ${error}`));
 
 }
+
 function deleteTodo(index) {
     fetch(`${baseURL}/todos/${index}`, {
         method: "DELETE",
@@ -134,6 +142,7 @@ const baseURL = "http://localhost:3000";
 // initialize state
 let todoItems;
 getTasks(`${baseURL}/todos`);
+dom.todoInput.focus();
 
 // renderTodos();
 
@@ -143,7 +152,17 @@ dom.addTodoButton.addEventListener('click', (e) => {
     //change UI
     renderTodos();
     console.dir(todoItems);
-})
+});
+
+dom.todoInput.addEventListener("keypress", (e) => {
+    if (e.key === 'Enter') {
+        //change state
+        addTodo();
+        //change UI
+        renderTodos();
+        console.dir(todoItems);
+    }
+});
 
 dom.todoList.addEventListener('click', (e) => {
     console.log(e.target)
@@ -156,4 +175,4 @@ dom.todoList.addEventListener('click', (e) => {
         deleteTodo(idx);
         renderTodos();
     }
-})
+});
