@@ -1,6 +1,6 @@
 function addTodo(url) {
     const todoTitle = dom.todoInput.value;
-    
+
     const newTodo = {
         'task': todoTitle,
         'completed': false
@@ -9,57 +9,71 @@ function addTodo(url) {
     //change server state
     //POST Request
     fetch(url, {
-        method:"POST",
-        headers:{
+        method: "POST",
+        headers: {
             'Content-type': 'application/json; charset=UTF-8',
         },
-        body:JSON.stringify(newTodo)
+        body: JSON.stringify(newTodo)
     })
-        .then(response=>{
-            if(response.ok){
-                
-                // change local state if server responded ok
-                todoItems.push(newTodo);
-            }else{
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+                //Get Task Id
+                // // change local state if server responded ok
+                // todoItems.push(newTodo);
+            } else {
                 throw new Error(`Server error status: ${response.status}`);
             }
         })
-        .catch(error=>console.error(`ERROR: ${error}`));
+        .then(data => {
 
-    
+            //change local state if server responded ok
+            todoItems.push(data);
+        })
+        .catch(error => console.error(`ERROR: ${error}`));
 
 }
 
 function toggleComplete(index) {
     const todo = todoItems[index];
-    todo.completed =  !todo.completed;
+    todo.completed = !todo.completed;
 
 }
 function deleteTodo(index) {
+    //change local state
     todoItems.splice(index, 1);
 
 }
 
 function renderTodos() {
     dom.todoList.innerHTML = '';
-    for (let i = 0; i < todoItems.length; i++) {
-        const todo = todoItems[i];
-
+    todoItems.forEach(todo => {
         dom.todoList.innerHTML += `
-            <li class="todo-item" data-id="${i}">
-                <span class="${todo.completed?'completed':''}">${todo.task}</span>
-                <button class="complete-btn">${todo.completed?'Undo':'Complete'}</button>
+            <li class="todo-item" data-id="${todo.id}">
+                <span class="${todo.completed ? 'completed' : ''}">${todo.task}</span>
+                <button class="complete-btn">${todo.completed ? 'Undo' : 'Complete'}</button>
                 <button class="delete-btn">Delete</button>
             </li>
         `;
-    }
+    });
+    // for (let i = 0; i < todoItems.length; i++) {
+    //     const todo = todoItems[i];
+
+    //     dom.todoList.innerHTML += `
+    //         <li class="todo-item" data-id="${i}">
+    //             <span class="${todo.completed?'completed':''}">${todo.task}</span>
+    //             <button class="complete-btn">${todo.completed?'Undo':'Complete'}</button>
+    //             <button class="delete-btn">Delete</button>
+    //         </li>
+    //     `;
+    // }
 }
 
 // Get DOM elements
 const dom = {
-    todoInput : document.getElementById('todo-input'),
-    addTodoButton : document.getElementById('add-todo'),
-    todoList : document.getElementById('todo-list')
+    todoInput: document.getElementById('todo-input'),
+    addTodoButton: document.getElementById('add-todo'),
+    todoList: document.getElementById('todo-list')
 };
 
 async function getTasks(url) {
@@ -83,7 +97,7 @@ getTasks(`${baseURL}/todos`);
 
 // renderTodos();
 
-dom.addTodoButton.addEventListener('click', (e)=>{
+dom.addTodoButton.addEventListener('click', (e) => {
     //change state
     addTodo(`${baseURL}/todos`);
     //change UI
@@ -91,15 +105,15 @@ dom.addTodoButton.addEventListener('click', (e)=>{
     console.dir(todoItems);
 })
 
-dom.todoList.addEventListener('click', (e)=>{
+dom.todoList.addEventListener('click', (e) => {
     console.log(e.target)
     const idx = e.target.parentElement.dataset.id;
 
-    if(e.target.classList.contains('complete-btn')) {
+    if (e.target.classList.contains('complete-btn')) {
         todoItems[idx].completed = !todoItems[idx].completed;
         renderTodos();
-    }else if(e.target.classList.contains('delete-btn')){
-        todoItems.splice(idx,1);
+    } else if (e.target.classList.contains('delete-btn')) {
+        todoItems.splice(idx, 1);
         renderTodos();
     }
 })
