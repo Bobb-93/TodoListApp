@@ -1,15 +1,32 @@
-function addTodo() {
+function addTodo(url) {
     const todoTitle = dom.todoInput.value;
-    //change server state
-    //POST Request
-
-    // change local state if server responded ok
+    
     const newTodo = {
         'task': todoTitle,
         'completed': false
-    }
+    };
 
-    todoItems.push(newTodo);
+    //change server state
+    //POST Request
+    fetch(url, {
+        method:"POST",
+        headers:{
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+        body:JSON.stringify(newTodo)
+    })
+        .then(response=>{
+            if(response.ok){
+                
+                // change local state if server responded ok
+                todoItems.push(newTodo);
+            }else{
+                throw new Error(`Server error status: ${response.status}`);
+            }
+        })
+        .catch(error=>console.error(`ERROR: ${error}`));
+
+    
 
 }
 
@@ -68,7 +85,7 @@ getTasks(`${baseURL}/todos`);
 
 dom.addTodoButton.addEventListener('click', (e)=>{
     //change state
-    addTodo();
+    addTodo(`${baseURL}/todos`);
     //change UI
     renderTodos();
     console.dir(todoItems);
