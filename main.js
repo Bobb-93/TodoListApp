@@ -1,8 +1,8 @@
 function addTodo() {
     const todoTitle = dom.todoInput.value.trim();
 
-    //change server state
-    //fetch - и ако е минало успешно, да променяме
+    //[Node JS] change server state
+    //[Node JS] fetch - и ако е минало успешно, да променяме
 
     //change local state
 
@@ -11,6 +11,7 @@ function addTodo() {
         return;
     }
 
+    //[Node JS] to send with POST method in JSON format (as object)
     const newTodo = {
         'task': todoTitle,
         'completed': false
@@ -31,11 +32,15 @@ function toggleComplete(index) {
     // toggle todo object 'completed' property value:
     todoItems[index].completed = !todoItems[index].completed;
 
+    //[Node JS] use PUT with whole object or PATCH method
+
     localStorage.setItem('todoItems', JSON.stringify(todoItems));
 
 }
 
 function deleteTodo(index) {
+
+    //[Node JS] we don't send object
 
     index >= 0 && todoItems.splice(index, 1);
 
@@ -109,16 +114,24 @@ const dom = {
 };
 
 async function getTasks(url) {
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log(data);
+    try{
+        const response = await fetch(url);//if is not OK - later
+        const data = await response.json();
+        console.log(data);
+        
+        //set local state
+        todoItemsDB = [...data];
+    } catch(error){
+        console.error(`ERROR: ${error}`);
+    }
     
-    todoItemsDB = [...data];
 }
+
+const baseURL = "http://localhost:3000/todos";
 
 // initialize state
 let todoItemsDB; // взимаме информация от тук, когато искаме да изобразяваме
-getTasks();
+getTasks(`${baseURL}/todos`);
 
 let todoItems = JSON.parse(localStorage.getItem("todoItems")) || [];
 renderTodos();
