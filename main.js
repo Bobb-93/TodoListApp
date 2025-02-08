@@ -1,4 +1,4 @@
-function addTodo(url) {
+function addTodo() {
     const todoTitle = dom.todoInput.value;
 
     const newTodo = {
@@ -8,7 +8,7 @@ function addTodo(url) {
 
     //change server state
     //POST Request
-    fetch(url, {
+    fetch(`${baseURL}/todos`, {
         method: "POST",
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -40,8 +40,19 @@ function toggleComplete(index) {
 
 }
 function deleteTodo(index) {
-    //change local state
-    todoItems.splice(index, 1);
+    fetch(`${baseURL}/todos/${index}`, {
+        method: "DELETE", 
+    })
+        .then(response=>{
+            if(response.ok){
+                //change local state
+                todoItems.splice(index, 1);
+            }else{
+                throw new Error(`Server error status: ${response.status}`);
+            }
+        })
+        .catch(error => console.error(`ERROR: ${error}`));
+    
 
 }
 
@@ -99,7 +110,7 @@ getTasks(`${baseURL}/todos`);
 
 dom.addTodoButton.addEventListener('click', (e) => {
     //change state
-    addTodo(`${baseURL}/todos`);
+    addTodo();
     //change UI
     renderTodos();
     console.dir(todoItems);
@@ -113,7 +124,8 @@ dom.todoList.addEventListener('click', (e) => {
         todoItems[idx].completed = !todoItems[idx].completed;
         renderTodos();
     } else if (e.target.classList.contains('delete-btn')) {
-        todoItems.splice(idx, 1);
+        deleteTodo(idx);
+        // todoItems.splice(idx, 1);
         renderTodos();
     }
 })
