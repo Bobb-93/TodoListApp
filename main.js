@@ -38,6 +38,19 @@ function toggleComplete(index) {
     const todo = todoItems[index];
     todo.completed = !todo.completed;
 
+    fetch(`${baseURL}/todos/${index}`, {
+        method: "DELETE", 
+    })
+        .then(response=>{
+            if(response.ok){
+                //change local state
+                todoItems.splice(index, 1);
+            }else{
+                throw new Error(`Server error status: ${response.status}`);
+            }
+        })
+        .catch(error => console.error(`ERROR: ${error}`));
+
 }
 function deleteTodo(index) {
     fetch(`${baseURL}/todos/${index}`, {
@@ -52,8 +65,6 @@ function deleteTodo(index) {
             }
         })
         .catch(error => console.error(`ERROR: ${error}`));
-    
-
 }
 
 function renderTodos() {
