@@ -132,6 +132,7 @@ async function getTasks(url) {
         const response = await fetch(url);
         const data = await response.json();
         todoItems = [...data]
+        localStorage.setItem("todoItems", JSON.stringify(todoItems));
         
         console.log(data);
         renderTodos();
