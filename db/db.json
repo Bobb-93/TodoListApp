@@ -1,14 +1,9 @@
 {
   "todos": [
     {
-      "id": "4ee6",
-      "task": "sdsda",
-      "completed": false
-    },
-    {
       "id": "ecc2",
       "task": "Task1",
-      "completed": false
+      "completed": true
     },
     {
       "id": "c3e2",
