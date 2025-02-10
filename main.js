@@ -83,7 +83,7 @@ function deleteTodo(index) {
                 // todoItems.splice(index, 1);
 
                 const todoIndex = todoItems.findIndex(todo => todo.id == index);
-                
+
                 if (todoIndex !== -1) {
                     todoItems.splice(todoIndex, 1);
                     localStorage.setItem('todoItems', JSON.stringify(todoItems));
@@ -133,7 +133,7 @@ async function getTasks(url) {
         const data = await response.json();
         todoItems = [...data]
         localStorage.setItem("todoItems", JSON.stringify(todoItems));
-        
+
         console.log(data);
         renderTodos();
 
