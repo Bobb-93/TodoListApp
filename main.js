@@ -7,8 +7,8 @@ function addTodo() {
     }
 
     const newTodo = {
-        'task': todoTitle,
-        'completed': false
+        "task": todoTitle,
+        "completed": false
     };
 
     //change server state
@@ -29,13 +29,15 @@ function addTodo() {
                 // // change local state if server responded ok
                 // todoItems.push(newTodo);
             } else {
-                throw new Error(`Server error status: ${response.status}`);
+                throw new Error(`Server response status: ${response.status}`);
             }
         })
         .then(data => {
 
             //change local state if server responded ok
             todoItems.push(data);
+            //renderTodos();
+            dom.todoInput.value = '';
             localStorage.setItem("todoItems", JSON.stringify(todoItems));
         })
         .catch(error => console.error(`ERROR: ${error}`));
@@ -46,6 +48,11 @@ function toggleComplete(index) {
     // const todo = todoItems[index];
 
     const todo = todoItems.filter(todo => todo.id === index)[0];
+
+    if(!todo){
+        alert('Todo Toggle Error!');
+        return;
+    }
 
     console.dir(todoItems);
     console.log(`index: ${index}`);
@@ -127,9 +134,9 @@ const dom = {
     todoList: document.getElementById('todo-list')
 };
 
-async function getTasks(url) {
+async function getTasks() {
     try {
-        const response = await fetch(url);
+        const response = await fetch(`${baseURL}/todos`);
         const data = await response.json();
         todoItems = [...data]
         localStorage.setItem("todoItems", JSON.stringify(todoItems));
@@ -145,7 +152,7 @@ async function getTasks(url) {
 const baseURL = "http://localhost:3000";
 // initialize state
 let todoItems;
-getTasks(`${baseURL}/todos`);
+getTasks();
 dom.todoInput.focus();
 
 // renderTodos();
